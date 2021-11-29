@@ -152,7 +152,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		//r = 50;
 		//u = 50;
 		if(MOD_CHAINGUN)
-			VectorMA(start, 1500, forward, end);
+			VectorMA(start, 100, forward, end);
 		else
 			VectorMA (start, 150, forward, end);
 		//VectorMA (end, r, right, end);
