@@ -555,9 +555,9 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 	{
 		if (ent == ignore)
 			continue;
-		if (!ent->takedamage)
+		if (!ent->takedamage || ent == attacker)
 			continue;
-
+		//gi.dprintf("in here");
 		VectorAdd (ent->mins, ent->maxs, v);
 		VectorMA (ent->s.origin, 0.5, v, v);
 		VectorSubtract (inflictor->s.origin, v, v);
