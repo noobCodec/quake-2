@@ -196,7 +196,8 @@ Use this call with a distnace of 0 to replace ai_face
 void ai_charge (edict_t *self, float dist)
 {
 	vec3_t	v;
-
+	if (!self->enemy)
+		return;
 	VectorSubtract (self->enemy->s.origin, self->s.origin, v);
 	self->ideal_yaw = vectoyaw(v);
 	M_ChangeYaw (self);

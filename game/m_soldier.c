@@ -485,6 +485,8 @@ void soldier_fire (edict_t *self, int flash_number)
 	}
 	else
 	{
+		if (!self->enemy)
+			return;
 		VectorCopy (self->enemy->s.origin, end);
 		end[2] += self->enemy->viewheight;
 		VectorSubtract (end, start, aim);
@@ -534,7 +536,8 @@ void soldier_attack1_refire1 (edict_t *self)
 {
 	if (self->s.skinnum > 1)
 		return;
-
+	if (!self->enemy)
+		return;
 	if (self->enemy->health <= 0)
 		return;
 
@@ -548,7 +551,8 @@ void soldier_attack1_refire2 (edict_t *self)
 {
 	if (self->s.skinnum < 2)
 		return;
-
+	if (!self->enemy)
+		return;
 	if (self->enemy->health <= 0)
 		return;
 
@@ -584,7 +588,8 @@ void soldier_attack2_refire1 (edict_t *self)
 {
 	if (self->s.skinnum > 1)
 		return;
-
+	if (!self->enemy)
+		return;
 	if (self->enemy->health <= 0)
 		return;
 
@@ -596,6 +601,8 @@ void soldier_attack2_refire1 (edict_t *self)
 
 void soldier_attack2_refire2 (edict_t *self)
 {
+	if (!self->enemy)
+		return;
 	if (self->s.skinnum < 2)
 		return;
 
@@ -742,7 +749,8 @@ void soldier_attack6_refire (edict_t *self)
 {
 	if (self->enemy->health <= 0)
 		return;
-
+	if (!self->enemy)
+		return;
 	if (range(self, self->enemy) < RANGE_MID)
 		return;
 

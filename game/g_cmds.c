@@ -736,9 +736,20 @@ Cmd_Wave_f
 void Cmd_Wave_f (edict_t *ent)
 {
 	int		i;
-
+	edict_t* tmp = NULL;
 	i = atoi (gi.argv(1));
+	while ((tmp = findradius(tmp, ent->s.origin, 200)) != NULL)
+	{
+		if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
+		{
+			gi.dprintf("found one");
+			tmp->enemy = NULL;
+			tmp->goalentity = ent;
+			M_MoveToGoal(tmp, 20);
+			tmp->monsterinfo.aiflags ^= AI_STAND_GROUND;
+		}
 
+	}
 	// can't wave when ducked
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 		return;
