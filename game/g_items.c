@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
 void		Use_Weapon (edict_t *ent, gitem_t *inv);
 void		Drop_Weapon (edict_t *ent, gitem_t *inv);
-
+void Weapon_Wand(edict_t* ent);
 void Weapon_Blaster (edict_t *ent);
 void Weapon_Shotgun (edict_t *ent);
 void Weapon_SuperShotgun (edict_t *ent);
@@ -1537,6 +1537,27 @@ always owned, never in the world
 		NULL,
 		0,
 /* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
+	},
+	{
+			"weapon_wand",
+			NULL,
+			Use_Weapon,
+			NULL,
+			Weapon_Wand,
+			"misc/w_pkup.wav",
+			NULL,
+			0,
+			"models/weapons/v_blast/tris.md2",
+			"w_blaster", //we need an icon for the Mk23
+			"Wand",
+			0,
+			0,
+			NULL,
+			IT_WEAPON|IT_STAY_COOP,
+			WEAP_BLASTER,
+			NULL,
+			0,
+			""
 	},
 
 	//

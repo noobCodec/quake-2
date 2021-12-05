@@ -165,9 +165,11 @@ void ai_walk (edict_t *self, float dist)
 	M_MoveToGoal (self, dist);
 
 	// check for noticing a player
-	if (FindTarget (self))
+	if (FindTarget(self))
+	{
+		//gi.dprintf("found him");
 		return;
-
+	}
 	if ((self->monsterinfo.search) && (level.time > self->monsterinfo.idle_time))
 	{
 		if (self->monsterinfo.idle_time)
@@ -265,13 +267,13 @@ int range (edict_t *self, edict_t *other)
 {
 	vec3_t	v;
 	float	len;
-
+	
 	VectorSubtract (self->s.origin, other->s.origin, v);
 	len = VectorLength (v);
 	if (len < MELEE_DISTANCE)
 		return RANGE_MELEE;
-	if (len < 500)
-		return RANGE_NEAR;
+	if (len < 200)
+		return RANGE_FAR;
 	if (len < 1000)
 		return RANGE_MID;
 	return RANGE_FAR;
@@ -337,6 +339,8 @@ void HuntTarget (edict_t *self)
 		self->monsterinfo.stand (self);
 	else
 		self->monsterinfo.run (self);
+	if (!self->enemy)
+		return;
 	VectorSubtract (self->enemy->s.origin, self->s.origin, vec);
 	self->ideal_yaw = vectoyaw(vec);
 	// wait a while before first attack
@@ -407,18 +411,48 @@ slower noticing monsters.
 qboolean FindTarget (edict_t *self)
 {
 	edict_t		*client;
+	edict_t* ent = NULL;
 	qboolean	heardit;
 	int			r;
 
 	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
 	{
-		if (self->goalentity && self->goalentity->inuse && self->goalentity->classname)
+		//gi.dprintf("thinking");
+		//if (self->goalentity && self->goalentity->inuse && self->goalentity->classname)
+		//{
+			//if (strcmp(self->goalentity->classname, "target_actor") == 0)
+			//	return false;
+		//}
+		if (self->enemy)
 		{
-			if (strcmp(self->goalentity->classname, "target_actor") == 0)
-				return false;
+			gi.dprintf(self->enemy->classname);
+			return true;
 		}
+		while((ent = findradius(ent, self->s.origin, 500)) != NULL)
+		{
+			if (ent->deadflag != DEAD_DEAD && (ent->svflags & SVF_MONSTER) && !ent->client && ent != self && !(ent->monsterinfo.aiflags & AI_GOOD_GUY))
+			{
+				gi.dprintf("%d",ent->delay);
+				//self->goalentity = ent;
+				self->enemy = ent;
+				self->monsterinfo.search_time = level.time + 5;
+				VectorCopy(self->enemy->s.origin, self->monsterinfo.last_sighting);
+				HuntTarget(self);
+				//self->monsterinfo.search_time = level.time + 5;
+				//ai_run(ent, 20);
+				return true;
+			}
 
-		//FIXME look for monsters?
+		}
+		while ((ent = findradius(ent, self->s.origin, 500)) != NULL)
+		{
+			if (ent->client) {
+				self->goalentity = ent;
+				M_MoveToGoal(self, 20);
+				break;
+			}
+
+		}
 		return false;
 	}
 
@@ -771,6 +805,7 @@ used by ai_run and ai_stand
 qboolean ai_checkattack (edict_t *self, float dist)
 {
 	vec3_t		temp;
+	edict_t* ent = NULL;
 	qboolean	hesDeadJim;
 
 // this causes monsters to run blindly to the combat point w/o firing
@@ -834,6 +869,20 @@ qboolean ai_checkattack (edict_t *self, float dist)
 	{
 		self->enemy = NULL;
 	// FIXME: look all around for other targets
+		while ((ent = findradius(ent, self->s.origin, 500)) != NULL)
+		{
+			if (ent->deadflag != DEAD_DEAD && (ent->svflags & SVF_MONSTER) && !ent->client && ent != self)
+			{
+				gi.dprintf("%d", ent->delay);
+				//self->goalentity = ent;
+				self->enemy = ent;
+				HuntTarget(ent);
+				//self->monsterinfo.search_time = level.time + 5;
+				//ai_run(ent, 20);
+				return true;
+			}
+
+		}
 		if (self->oldenemy && self->oldenemy->health > 0)
 		{
 			self->enemy = self->oldenemy;

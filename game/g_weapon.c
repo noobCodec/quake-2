@@ -317,7 +317,6 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		G_FreeEdict (self);
 		return;
 	}
-
 	if (self->owner->client)
 		PlayerNoise(self->owner, self->s.origin, PNOISE_IMPACT);
 
@@ -345,6 +344,66 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 	}
 
 	G_FreeEdict (self);
+}
+void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* surf)
+{
+	int		mod;
+	edict_t* ent = NULL;
+	if (other == self->owner)
+		return;
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(self);
+		return;
+	}
+	if (!other->takedamage || other == self)
+		return;
+	other->monsterinfo.aiflags |= AI_GOOD_GUY;
+	other->combattarget = NULL;
+	while ((ent = findradius(ent, other->s.origin, 500)) != NULL)
+	{
+		//gi.dprintf("%d\n",ent->monsterinfo.aiflags & AI_GOOD_GUY);
+		//gi.dprintf(ent->classname);
+		if (ent->deadflag != DEAD_DEAD && (ent->svflags & SVF_MONSTER)&& !ent->client && other != ent && other != self && !(ent->monsterinfo.aiflags & AI_GOOD_GUY))
+		{
+			other->enemy = ent;
+			other->monsterinfo.search_time = level.time + 5;
+			HuntTarget(other);
+			VectorCopy(other->enemy->s.origin, other->monsterinfo.last_sighting);
+			break;
+		}
+
+	}
+	//other->enemy = NULL;
+	//gi.dprintf("%d",other->enemy);
+	//other->monsterinfo.aiflags |= AI_COMBAT_POINT;
+	
+	//if (self->owner->client)
+		//PlayerNoise(self->owner, self->s.origin, PNOISE_IMPACT);
+
+	/*if (other->takedamage)
+	{
+		if (self->spawnflags & 1)
+			mod = MOD_HYPERBLASTER;
+		else
+		{
+			mod = MOD_BLASTER;
+			self->dmg = 500;
+		}
+		T_Damage(other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY, mod);
+	}*/
+		gi.WriteByte(svc_temp_entity);
+		gi.WriteByte(TE_BLASTER);
+		gi.WritePosition(self->s.origin);
+		if (!plane)
+			gi.WriteDir(vec3_origin);
+		else
+			gi.WriteDir(plane->normal);
+		gi.multicast(self->s.origin, MULTICAST_PVS);
+	
+
+	G_FreeEdict(self);
 }
 
 void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int effect, qboolean hyper)
@@ -377,7 +436,7 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 	if(hyper)
 		bolt->nextthink = level.time + 0.06;
 	else
-		bolt->nextthink = level.time + 0.00001;
+		bolt->nextthink = level.time + 0.0015;
 	bolt->think = G_FreeEdict;
 	bolt->dmg = damage;
 	bolt->classname = "bolt";
@@ -395,6 +454,49 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 		bolt->touch (bolt, tr.ent, NULL, NULL);
 	}
 }	
+void fire_blaster2(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed, int effect)
+{
+	edict_t* bolt;
+	trace_t	tr;
+
+	VectorNormalize(dir);
+	bolt = G_Spawn();
+	bolt->svflags = SVF_DEADMONSTER;
+	// yes, I know it looks weird that projectiles are deadmonsters
+	// what this means is that when prediction is used against the object
+	// (blaster/hyperblaster shots), the player won't be solid clipped against
+	// the object.  Right now trying to run into a firing hyperblaster
+	// is very jerky since you are predicted 'against' the shots.
+	VectorCopy(start, bolt->s.origin);
+	VectorCopy(start, bolt->s.old_origin);
+	vectoangles(dir, bolt->s.angles);
+	VectorScale(dir, speed, bolt->velocity);
+	bolt->movetype = MOVETYPE_FLYMISSILE;
+	bolt->clipmask = MASK_SHOT;
+	bolt->solid = SOLID_BBOX;
+	bolt->s.effects |= effect;
+	VectorClear(bolt->mins);
+	VectorClear(bolt->maxs);
+	bolt->s.modelindex = gi.modelindex("models/objects/laser/tris.md2");
+	bolt->s.sound = gi.soundindex("misc/lasfly.wav");
+	bolt->owner = self;
+	bolt->touch = blaster_touch2;
+	bolt->nextthink = level.time + 3;
+	bolt->think = G_FreeEdict;
+	bolt->dmg = damage;
+	bolt->classname = "bolt";
+	gi.linkentity(bolt);
+
+	if (self->client)
+		check_dodge(self, bolt->s.origin, dir, speed);
+
+	tr = gi.trace(self->s.origin, NULL, NULL, bolt->s.origin, bolt, MASK_SHOT);
+	if (tr.fraction < 1.0)
+	{
+		VectorMA(bolt->s.origin, -10, dir, bolt->s.origin);
+		bolt->touch(bolt, tr.ent, NULL, NULL);
+	}
+}
 
 
 /*

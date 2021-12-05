@@ -538,12 +538,11 @@ qboolean monster_start (edict_t *self)
 		G_FreeEdict (self);
 		return false;
 	}
-
 	if ((self->spawnflags & 4) && !(self->monsterinfo.aiflags & AI_GOOD_GUY))
 	{
 		self->spawnflags &= ~4;
 		self->spawnflags |= 1;
-//		gi.dprintf("fixed spawnflags on %s at %s\n", self->classname, vtos(self->s.origin));
+		gi.dprintf("fixed spawnflags on %s at %s\n", self->classname, vtos(self->s.origin));
 	}
 
 	if (!(self->monsterinfo.aiflags & AI_GOOD_GUY))
