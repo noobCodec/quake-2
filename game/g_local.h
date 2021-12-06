@@ -1113,5 +1113,6 @@ struct edict_s
 	monsterinfo_t	monsterinfo;
 	int myexp;
 	int mylvl;
+	int mounted;
 };
 

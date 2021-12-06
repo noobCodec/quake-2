@@ -1405,6 +1405,7 @@ void CL_CalcViewValues (void)
 	{	// use predicted values
 		for (i=0 ; i<3 ; i++)
 			cl.refdef.viewangles[i] = cl.predicted_angles[i];
+		if(cl.parse_entities(5))
 	}
 	else
 	{	// just use interpolated values

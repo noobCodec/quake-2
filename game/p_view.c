@@ -259,7 +259,6 @@ void SV_CalcViewOffset (edict_t *ent)
 		}
 		angles[PITCH] += ratio * ent->client->v_dmg_pitch;
 		angles[ROLL] += ratio * ent->client->v_dmg_roll;
-
 		// add pitch based on fall kick
 
 		ratio = (ent->client->fall_time - level.time) / FALL_TIME;
@@ -276,8 +275,9 @@ void SV_CalcViewOffset (edict_t *ent)
 		angles[ROLL] += delta*run_roll->value;
 
 		// add angles based on bob
-
 		delta = bobfracsin * bob_pitch->value * xyspeed;
+		if (ent->mounted)
+			delta = bobfracsin * 0.05 * xyspeed;
 		if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 			delta *= 6;		// crouching
 		angles[PITCH] += delta;
@@ -298,7 +298,8 @@ void SV_CalcViewOffset (edict_t *ent)
 	// add view height
 
 	v[2] += ent->viewheight;
-
+	if (ent->mounted)
+		v[2] += 30;
 	// add fall height
 
 	ratio = (ent->client->fall_time - level.time) / FALL_TIME;
@@ -333,7 +334,6 @@ void SV_CalcViewOffset (edict_t *ent)
 		v[2] = -22;
 	else if (v[2] > 30)
 		v[2] = 30;
-
 	VectorCopy (v, ent->client->ps.viewoffset);
 }
 
@@ -1072,7 +1072,6 @@ void ClientEndServerFrame (edict_t *ent)
 
 	VectorCopy (ent->velocity, ent->client->oldvelocity);
 	VectorCopy (ent->client->ps.viewangles, ent->client->oldviewangles);
-
 	// clear weapon kicks
 	VectorClear (ent->client->kick_origin);
 	VectorClear (ent->client->kick_angles);
