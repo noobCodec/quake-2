@@ -426,14 +426,14 @@ qboolean FindTarget (edict_t *self)
 		//}
 		if (self->enemy)
 		{
-			gi.dprintf(self->enemy->classname);
+			//gi.dprintf(self->enemy->classname);
 			return true;
 		}
-		while((ent = findradius(ent, self->s.origin, 500)) != NULL)
+		while((ent = findradius(ent, self->s.origin, 100)) != NULL)
 		{
 			if (ent->deadflag != DEAD_DEAD && (ent->svflags & SVF_MONSTER) && !ent->client && ent != self && !(ent->monsterinfo.aiflags & AI_GOOD_GUY))
 			{
-				gi.dprintf("%d",ent->delay);
+				//gi.dprintf("%d",ent->delay);
 				//self->goalentity = ent;
 				self->enemy = ent;
 				self->monsterinfo.search_time = level.time + 5;
@@ -874,7 +874,7 @@ qboolean ai_checkattack (edict_t *self, float dist)
 		{
 			if (ent->deadflag != DEAD_DEAD && (ent->svflags & SVF_MONSTER) && !ent->client && ent != self)
 			{
-				gi.dprintf("%d", ent->delay);
+				//gi.dprintf("%d", ent->delay);
 				//self->goalentity = ent;
 				self->enemy = ent;
 				HuntTarget(ent);

@@ -883,6 +883,7 @@ void SV_Physics_Step (edict_t *ent)
 		if ((wasonground) || (ent->flags & (FL_SWIM|FL_FLY)))
 			if (!(ent->health <= 0.0 && !M_CheckBottom(ent)))
 			{
+
 				vel = ent->velocity;
 				speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
 				if (speed)
@@ -895,7 +896,6 @@ void SV_Physics_Step (edict_t *ent)
 					if (newspeed < 0)
 						newspeed = 0;
 					newspeed /= speed;
-
 					vel[0] *= newspeed;
 					vel[1] *= newspeed;
 				}

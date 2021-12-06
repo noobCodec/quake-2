@@ -142,7 +142,6 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 	vec3_t		water_start;
 	qboolean	water = false;
 	int			content_mask = MASK_SHOT | MASK_WATER;
-
 	tr = gi.trace (self->s.origin, NULL, NULL, start, self, MASK_SHOT);
 	if (!(tr.fraction < 1.0))
 	{
@@ -361,7 +360,7 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 		return;
 	other->monsterinfo.aiflags |= AI_GOOD_GUY;
 	other->combattarget = NULL;
-	while ((ent = findradius(ent, other->s.origin, 500)) != NULL)
+	while ((ent = findradius(ent, other->s.origin, 200)) != NULL)
 	{
 		//gi.dprintf("%d\n",ent->monsterinfo.aiflags & AI_GOOD_GUY);
 		//gi.dprintf(ent->classname);

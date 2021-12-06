@@ -742,7 +742,7 @@ void Cmd_Wave_f (edict_t *ent)
 	{
 		if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
 		{
-			gi.dprintf("found one");
+			//gi.dprintf("found one");
 			tmp->enemy = NULL;
 			tmp->goalentity = ent;
 			M_MoveToGoal(tmp, 20);
@@ -802,13 +802,43 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 	char	*p;
 	char	text[2048];
 	gclient_t *cl;
-
 	if (gi.argc () < 2 && !arg0)
 		return;
 
 	if (!((int)(dmflags->value) & (DF_MODELTEAMS | DF_SKINTEAMS)))
 		team = false;
-
+	if (!strcmp(gi.argv(1), "warrior"))
+	{
+		ent->health = 500;
+		gi.dprintf("PICKED WARRIOR\n");
+		gi.cvar_set("cl_forwardspeed","50");
+		gi.cvar_set("cl_sidespeed", "50");
+		gi.cvar_set("fov", "50");
+		ent->dmg = 3;
+		return;
+	}
+	else if(!strcmp(gi.argv(1), "archer"))
+	{
+		ent->health = 200;
+		gi.dprintf("PICKED ARCHER\n");
+		gi.cvar_set("cl_forwardspeed", "250");
+		gi.cvar_set("cl_sidespeed", "250");
+		gi.cvar_set("fov", "120");
+		ent->dmg = -8;
+		ent->viewheight = 90;
+		gi.dprintf(ent->classname);
+		return;
+	}
+	else if (!strcmp(gi.argv(1), "knight"))
+	{
+		ent->health = 800;
+		gi.dprintf("PICKED KNIGHT\n");
+		gi.cvar_set("cl_forwardspeed", "490");
+		gi.cvar_set("cl_sidespeed", "490");
+		gi.cvar_set("fov", "30");
+		ent->dmg = 1;
+		return;
+	}
 	if (team)
 		Com_sprintf (text, sizeof(text), "(%s): ", ent->client->pers.netname);
 	else

@@ -95,7 +95,22 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		targ->health = -999;
 
 	targ->enemy = attacker;
-
+	if (!attacker->myexp)
+		attacker->myexp = 60;
+	else
+		attacker->myexp += 30;
+	if (attacker->myexp > 100)
+	{
+		gi.dprintf("leveled up\n");
+		if (attacker->mylvl)
+			attacker->mylvl += 1;
+		else
+			attacker->mylvl = 1;
+		attacker->dmg +=1;
+		attacker->health += 20;
+		attacker->max_health += 20;
+		attacker->myexp -= 100;
+	}
 	if ((targ->svflags & SVF_MONSTER) && (targ->deadflag != DEAD_DEAD))
 	{
 //		targ->svflags |= SVF_DEADMONSTER;	// now treat as a different content type
@@ -408,7 +423,18 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if (!damage)
 			damage = 1;
 	}
-
+	//gi.dprintf("%d\n", damage);
+	if(attacker->client)
+	{
+		//gi.dprintf("%d\n", attacker->dmg);
+		if (attacker->dmg < 0)
+			damage /= (attacker->dmg * -1);
+		else
+			damage *= attacker->dmg;
+		if (!damage)
+			damage = 1;
+	}
+	//gi.dprintf("%d\n", damage);
 	client = targ->client;
 
 	if (dflags & DAMAGE_BULLET)

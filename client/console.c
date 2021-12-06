@@ -535,8 +535,9 @@ void Con_DrawNotify (void)
 		}
 		else
 		{
-			DrawString (8, v, "say:");
-			skip = 5;
+			//DrawString (8, v, "say:");
+			DrawString(8, v, "Pick A Class:");
+			skip = 14;
 		}
 
 		s = chat_buffer;

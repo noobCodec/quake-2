@@ -699,7 +699,7 @@ void P_WorldEffects (void)
 	else
 	{
 		current_player->air_finished = level.time + 12;
-		current_player->dmg = 2;
+		//current_player->dmg = 2;
 	}
 
 	//
