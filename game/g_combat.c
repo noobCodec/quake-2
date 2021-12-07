@@ -99,6 +99,14 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		attacker->myexp = 60;
 	else
 		attacker->myexp += 30;
+	if (!attacker->money && attacker->client)
+	{
+		attacker->money = 400;
+	}
+	else if (attacker->client)
+	{
+		attacker->money += 400;
+	}
 	if (attacker->myexp > 100)
 	{
 		gi.dprintf("leveled up\n");
@@ -136,7 +144,8 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		targ->touch = NULL;
 		monster_death_use (targ);
 	}
-
+	if(attacker->money)
+		gi.dprintf("%d",attacker->money);
 	targ->die (targ, inflictor, attacker, damage, point);
 }
 
@@ -429,7 +438,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		//gi.dprintf("%d\n", attacker->dmg);
 		if (attacker->dmg < 0)
 			damage /= (attacker->dmg * -1);
-		else
+		else if(attacker->dmg > 0)
 			damage *= attacker->dmg;
 		if (!damage)
 			damage = 1;

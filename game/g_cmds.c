@@ -738,18 +738,7 @@ void Cmd_Wave_f (edict_t *ent)
 	int		i;
 	edict_t* tmp = NULL;
 	i = atoi (gi.argv(1));
-	while ((tmp = findradius(tmp, ent->s.origin, 200)) != NULL)
-	{
-		if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
-		{
-			//gi.dprintf("found one");
-			tmp->enemy = NULL;
-			tmp->goalentity = ent;
-			M_MoveToGoal(tmp, 20);
-			tmp->monsterinfo.aiflags ^= AI_STAND_GROUND;
-		}
-
-	}
+	
 	// can't wave when ducked
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 		return;
@@ -762,11 +751,39 @@ void Cmd_Wave_f (edict_t *ent)
 	switch (i)
 	{
 	case 0:
+		while ((tmp = findradius(tmp, ent->s.origin, 200)) != NULL)
+		{
+			if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
+			{
+				ent->nextthink = level.time + 5;
+				//gi.dprintf("found one");
+				tmp->enemy = NULL;
+				tmp->goalentity = ent;
+				M_MoveToGoal(tmp, 20);
+				tmp->monsterinfo.aiflags &= ~(AI_STAND_GROUND);
+				//tmp->monsterinfo.aiflags ^= AI_STAND_GROUND;
+			}
+
+		}
 		gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
 		ent->s.frame = FRAME_flip01-1;
 		ent->client->anim_end = FRAME_flip12;
 		break;
 	case 1:
+		while ((tmp = findradius(tmp, ent->s.origin, 200)) != NULL)
+		{
+			if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
+			{
+				ent->nextthink = level.time + 5;
+				//gi.dprintf("found one");
+				tmp->enemy = NULL;
+				tmp->goalentity = NULL;
+				//M_MoveToGoal(tmp, 20);
+				tmp->monsterinfo.aiflags |= AI_HOLD_FRAME;
+				tmp->monsterinfo.aiflags |= AI_STAND_GROUND;
+			}
+
+		}
 		gi.cprintf (ent, PRINT_HIGH, "salute\n");
 		ent->s.frame = FRAME_salute01-1;
 		ent->client->anim_end = FRAME_salute11;

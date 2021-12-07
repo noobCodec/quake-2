@@ -348,6 +348,8 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 {
 	int		mod;
 	edict_t* ent = NULL;
+	edict_t* localclient = NULL;
+	int check = 0;
 	if (other == self->owner)
 		return;
 
@@ -358,6 +360,29 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 	}
 	if (!other->takedamage || other == self)
 		return;
+	while (1)
+	{
+		check++;
+		if (check > game.maxclients)
+			check = 1;
+		ent = &g_edicts[check];
+		if (ent->client)
+		{
+			localclient=ent;
+			break;		// got one
+		}
+	}
+	if (localclient->money && localclient->money >= 400)
+	{
+		localclient->money -= 400;
+		gi.dprintf("BOUGHT ENEMY");
+	}
+	else
+	{
+		gi.dprintf("YOU LACK FUNDS");
+		G_FreeEdict(self);
+		return;
+	}
 	other->monsterinfo.aiflags |= AI_GOOD_GUY;
 	other->combattarget = NULL;
 	while ((ent = findradius(ent, other->s.origin, 200)) != NULL)

@@ -445,6 +445,11 @@ qboolean FindTarget (edict_t *self)
 			}
 
 		}
+		gi.dprintf("%d", self->monsterinfo.aiflags & AI_STAND_GROUND);
+		if (self->monsterinfo.aiflags & AI_STAND_GROUND)
+		{
+			return false;
+		}
 		while ((ent = findradius(ent, self->s.origin, 500)) != NULL)
 		{
 			if (ent->client) {

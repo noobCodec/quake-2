@@ -1114,5 +1114,6 @@ struct edict_s
 	int myexp;
 	int mylvl;
 	int mounted;
+	int money;
 };
 
