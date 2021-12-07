@@ -841,17 +841,18 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 	}
 	else if (!strcmp(gi.argv(1), "horse"))
 	{
-		if (ent->mounted || ent->mylvl < 1)
+		if (ent->mounted /* || ent->mylvl < 1 */ )
 		{
 			ent->mounted = 0;
 			return;
 		}
+		ent->dmg = 10;
 		ent->max_health = 2000;
 		ent->health = 1200;
 		ent->mounted = 1;
 		gi.dprintf("HORSEY\n");
-		gi.cvar_set("cl_forwardspeed", "490");
-		gi.cvar_set("cl_sidespeed", "490");
+		gi.cvar_set("cl_forwardspeed", "800");
+		gi.cvar_set("cl_sidespeed", "800");
 		gi.cvar_set("fov", "150");
 		ent->dmg = 1;
 		return;
