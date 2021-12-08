@@ -415,7 +415,6 @@ qboolean FindTarget (edict_t *self)
 	edict_t* ent = NULL;
 	qboolean	heardit;
 	int			r;
-
 	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
 	{
 		//gi.dprintf("thinking");
@@ -437,6 +436,8 @@ qboolean FindTarget (edict_t *self)
 				//self->goalentity = ent;
 				self->enemy = ent;
 				self->monsterinfo.search_time = level.time + 5;
+				self->s.effects |= EF_QUAD;
+				self->enemy->s.effects |= EF_PENT;
 				VectorCopy(self->enemy->s.origin, self->monsterinfo.last_sighting);
 				HuntTarget(self);
 				//self->monsterinfo.search_time = level.time + 5;

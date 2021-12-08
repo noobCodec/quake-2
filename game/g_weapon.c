@@ -383,6 +383,10 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 		G_FreeEdict(self);
 		return;
 	}
+	if (localclient->minions)
+		localclient->minions += 1;
+	else
+		localclient->minions = 1;
 	other->monsterinfo.aiflags |= AI_GOOD_GUY;
 	other->combattarget = NULL;
 	while ((ent = findradius(ent, other->s.origin, 200)) != NULL)

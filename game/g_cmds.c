@@ -765,9 +765,10 @@ void Cmd_Wave_f (edict_t *ent)
 			}
 
 		}
-		gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
-		ent->s.frame = FRAME_flip01-1;
-		ent->client->anim_end = FRAME_flip12;
+		//gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
+		//ent->s.frame = FRAME_flip01-1;
+		//ent->client->anim_end = FRAME_flip12;
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/followme.wav"), 1, ATTN_NORM, 0);
 		break;
 	case 1:
 		while ((tmp = findradius(tmp, ent->s.origin, 200)) != NULL)
@@ -784,14 +785,28 @@ void Cmd_Wave_f (edict_t *ent)
 			}
 
 		}
-		gi.cprintf (ent, PRINT_HIGH, "salute\n");
-		ent->s.frame = FRAME_salute01-1;
-		ent->client->anim_end = FRAME_salute11;
+		gi.sound(ent, CHAN_ITEM, gi.soundindex("items/hold.wav"), 1, ATTN_NORM, 0);
+		//gi.cprintf (ent, PRINT_HIGH, "salute\n");
+		//ent->s.frame = FRAME_salute01-1;
+		//ent->client->anim_end = FRAME_salute11;
 		break;
 	case 2:
-		gi.cprintf (ent, PRINT_HIGH, "taunt\n");
-		ent->s.frame = FRAME_taunt01-1;
-		ent->client->anim_end = FRAME_taunt17;
+		if (ent->mounted  || ent->mylvl < 1 )
+		{
+			gi.cvar_set("cl_forwardspeed", "200");
+			gi.cvar_set("cl_sidespeed", "200");
+			gi.cvar_set("fov", "90");
+			ent->mounted = 0;
+			return;
+		}
+		ent->dmg = 10;
+		ent->max_health = 2000;
+		ent->health = 1200;
+		ent->mounted = 1;
+		gi.dprintf("HORSEY\n");
+		gi.cvar_set("cl_forwardspeed", "800");
+		gi.cvar_set("cl_sidespeed", "800");
+		gi.cvar_set("fov", "150");
 		break;
 	case 3:
 		gi.cprintf (ent, PRINT_HIGH, "wave\n");

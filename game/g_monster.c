@@ -533,6 +533,7 @@ void monster_death_use (edict_t *self)
 
 qboolean monster_start (edict_t *self)
 {
+	edict_t *fx = G_Spawn();
 	if (deathmatch->value)
 	{
 		G_FreeEdict (self);

@@ -1115,5 +1115,6 @@ struct edict_s
 	int mylvl;
 	int mounted;
 	int money;
+	int minions;
 };
 

@@ -385,7 +385,18 @@ void G_SetStats (edict_t *ent)
 	//
 	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health;
-
+	if (ent->minions)
+		ent->client->ps.stats[STAT_MINIONS] = ent->minions;
+	else
+		ent->client->ps.stats[STAT_MINIONS] = 0;
+	if (ent->mylvl)
+		ent->client->ps.stats[STAT_LVL] = ent->mylvl;
+	else
+		ent->client->ps.stats[STAT_LVL] = 0;
+	if (ent->money)
+		ent->client->ps.stats[STAT_MONEY] = ent->money;
+	else
+		ent->client->ps.stats[STAT_MONEY] = 0;
 	//
 	// ammo
 	//

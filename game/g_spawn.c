@@ -701,6 +701,30 @@ char *single_statusbar =
 "	xv	148 "
 "	pic	11 "
 "endif "
+
+//Minions
+"	yb	-96 "		// New
+"	xv	0 "		// New
+"	num	3	18 "	// New. Display 2-digits with value from stat-array at index 18
+
+"	yb	-90 "		// New
+"	xv -50 "		// New
+"string \"Minions\" "
+//Lvl
+"	yb	-144 "		// New
+"	xv	0 "		// New
+"	num	3	19 "	// New. Display 2-digits with value from stat-array at index 19
+
+"	yb	-138 "		// New
+"	xv -50 "		// New
+"string \"Level\" "
+"	yb	-192 "		// New
+"	xv	0 "		// New
+"	num	4	20 "	// New. Display 2-digits with value from stat-array at index 19
+
+"	yb	-186 "		// New
+"	xv -50 "		// New
+"string \"Money\" "
 ;
 
 char *dm_statusbar =
