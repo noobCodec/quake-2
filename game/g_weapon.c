@@ -388,8 +388,10 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 	else
 		localclient->minions = 1;
 	other->monsterinfo.aiflags |= AI_GOOD_GUY;
+	other->enemy = NULL;
 	other->combattarget = NULL;
-	while ((ent = findradius(ent, other->s.origin, 200)) != NULL)
+	other->monsterinfo.search_time = level.time + 5;
+	/*while ((ent = findradius(ent, other->s.origin, 200)) != NULL)
 	{
 		//gi.dprintf("%d\n",ent->monsterinfo.aiflags & AI_GOOD_GUY);
 		//gi.dprintf(ent->classname);
@@ -402,7 +404,7 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 			break;
 		}
 
-	}
+	}*/
 	//other->enemy = NULL;
 	//gi.dprintf("%d",other->enemy);
 	//other->monsterinfo.aiflags |= AI_COMBAT_POINT;

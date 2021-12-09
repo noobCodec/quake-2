@@ -613,8 +613,12 @@ void InitClientPersistant (gclient_t *client)
 	item = FindItem("Wand");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
-
 	client->pers.weapon = item;
+	item = FindItem("Blaster");
+	client->pers.selected_item = ITEM_INDEX(item);
+	client->pers.inventory[client->pers.selected_item] = 1;
+	client->pers.weapon = item;
+	
 
 	client->pers.health			= 100;
 	client->pers.max_health		= 100;
