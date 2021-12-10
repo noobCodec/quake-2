@@ -601,11 +601,62 @@ void mutant_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 		self->monsterinfo.currentmove = &mutant_move_death2;
 }
 
-
+void SV_AddGravity(edict_t* ent);
 //
 // SPAWN
 //
-
+void rideme(edict_t* self)
+{
+	int check = 0;
+	edict_t* cl;
+	edict_t* ent;
+	trace_t trace;
+	while (1)
+	{
+		check++;
+		if (check > game.maxclients)
+			check = 1;
+		ent = &g_edicts[check];
+		if (ent->client)
+		{
+			cl = ent;
+			break;		// got one
+		}
+	}
+	vec3_t neworg;
+	if (cl->client)
+	{
+		M_CheckGround(self);
+		VectorCopy(self->s.origin, self->s.old_origin);
+		if (!self->groundentity|| self->groundentity->client)
+			cl->velocity[2] -= 400;
+		VectorMA(self->s.origin, 0.125, cl->velocity, neworg);
+		gi.dprintf(vtos(cl->velocity));
+		trace = gi.trace(self->s.origin, self->mins, self->maxs, neworg, self, MASK_MONSTERSOLID);
+		if (trace.fraction == 1)
+		{
+		if (cl->velocity[2] == -400)
+			trace.endpos[2] += 40;
+		VectorCopy(trace.endpos, self->s.origin);
+		VectorCopy(self->s.origin, cl->s.origin);
+		cl->s.origin[2] += 30;
+		gi.linkentity(self);
+		self->nextthink = level.time + FRAMETIME;
+		return;
+		}
+		self->s.origin[2] += 2;
+		//VectorCopy(neworg,cl->s.origin);
+		//VectorCopy(neworg, self->s.origin);
+		gi.linkentity(self);
+	}
+	
+	self->nextthink = level.time + FRAMETIME;
+}
+void mountthink(edict_t* self, edict_t* other)
+{
+	self->think = rideme;
+	self->nextthink = level.time + FRAMETIME;
+}
 /*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
 */
 void SP_monster_mutant (edict_t *self)
@@ -645,6 +696,7 @@ void SP_monster_mutant (edict_t *self)
 
 	self->monsterinfo.stand = mutant_stand;
 	self->monsterinfo.walk = mutant_walk;
+	self->touch = mountthink;
 	self->monsterinfo.run = mutant_run;
 	self->monsterinfo.dodge = NULL;
 	self->monsterinfo.attack = mutant_jump;

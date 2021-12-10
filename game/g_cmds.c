@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 #include "m_player.h"
-
+void ED_CallSpawn(edict_t* ent);
 
 char *ClientTeam (edict_t *ent)
 {
@@ -736,7 +736,9 @@ Cmd_Wave_f
 void Cmd_Wave_f (edict_t *ent)
 {
 	int		i;
+	edict_t* horse;
 	edict_t* tmp = NULL;
+	
 	i = atoi (gi.argv(1));
 	
 	// can't wave when ducked
@@ -791,7 +793,13 @@ void Cmd_Wave_f (edict_t *ent)
 		//ent->client->anim_end = FRAME_salute11;
 		break;
 	case 2:
-		if (ent->mounted  || ent->mylvl < 1 )
+		horse = G_Spawn();
+		horse->classname = "monster_mutant";
+		ED_CallSpawn(horse);
+		horse->monsterinfo.aiflags |= AI_GOOD_GUY;
+		VectorCopy(ent->s.origin, horse->s.origin);
+		horse->s.origin[1] += 50;
+		if (ent->mounted)
 		{
 			gi.cvar_set("cl_forwardspeed", "200");
 			gi.cvar_set("cl_sidespeed", "200");
@@ -804,9 +812,9 @@ void Cmd_Wave_f (edict_t *ent)
 		ent->health = 1200;
 		ent->mounted = 1;
 		gi.dprintf("HORSEY\n");
-		gi.cvar_set("cl_forwardspeed", "800");
-		gi.cvar_set("cl_sidespeed", "800");
-		gi.cvar_set("fov", "150");
+		//gi.cvar_set("cl_forwardspeed", "800");
+		//gi.cvar_set("cl_sidespeed", "800");
+		//gi.cvar_set("fov", "150");
 		break;
 	case 3:
 		gi.cprintf (ent, PRINT_HIGH, "wave\n");
