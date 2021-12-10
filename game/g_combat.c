@@ -109,7 +109,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	}
 	if (attacker->myexp > 100)
 	{
-		gi.dprintf("leveled up\n");
+		//gi.dprintf("leveled up\n");
 		if (attacker->mylvl)
 			attacker->mylvl += 1;
 		else
@@ -144,8 +144,8 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		targ->touch = NULL;
 		monster_death_use (targ);
 	}
-	if(attacker->money)
-		gi.dprintf("%d",attacker->money);
+	//if(attacker->money)
+		//gi.dprintf("%d",attacker->money);
 	targ->die (targ, inflictor, attacker, damage, point);
 }
 

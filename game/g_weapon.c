@@ -803,7 +803,7 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 	int			mask;
 	qboolean	water;
 	//gi.dprintf("%f,%f,%f\n", aimdir[0], aimdir[1], aimdir[2]);
-	gi.dprintf("%s",self->classname);
+	//gi.dprintf("%s",self->classname);
 	//if(self->classname == )
 	VectorMA (start, 300, aimdir, end);
 	VectorCopy (start, from);
