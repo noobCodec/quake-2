@@ -108,7 +108,15 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	}
 	if (targ->health < -999)
 		targ->health = -999;
-
+	if(targ->monsterinfo.aiflags & AI_GOOD_GUY)
+	{
+		if (cl->minions < 1)
+		{
+			cl->minions = 0;
+		}
+		else
+			cl->minions -= 1;
+	}
 	//targ->enemy = attacker;
 	if (!attacker->myexp)
 		attacker->myexp = 60;

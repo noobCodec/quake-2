@@ -638,7 +638,8 @@ void rideme(edict_t* self)
 		if (!self->groundentity|| self->groundentity->client)
 			cl->velocity[2] -= 400;
 		VectorMA(self->s.origin, 0.125, cl->velocity, neworg);
-		gi.dprintf(vtos(cl->velocity));
+		self->s.angles[YAW] = cl->s.angles[YAW];
+		//gi.dprintf(vtos(cl->velocity));
 		trace = gi.trace(self->s.origin, self->mins, self->maxs, neworg, self, MASK_MONSTERSOLID);
 		if (trace.fraction == 1)
 		{

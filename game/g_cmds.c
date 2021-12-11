@@ -757,9 +757,9 @@ void Cmd_Wave_f (edict_t *ent)
 		{
 			if (tmp->deadflag != DEAD_DEAD && (tmp->svflags & SVF_MONSTER) && !tmp->client && tmp != ent && (tmp->monsterinfo.aiflags & AI_GOOD_GUY))
 			{
-				ent->nextthink = level.time + 5;
 				//gi.dprintf("found one");
 				tmp->enemy = NULL;
+				tmp->oldenemy = NULL;
 				tmp->goalentity = ent;
 				M_MoveToGoal(tmp, 20);
 				tmp->monsterinfo.aiflags &= ~(AI_STAND_GROUND);

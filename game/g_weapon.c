@@ -394,6 +394,7 @@ void blaster_touch2(edict_t* self, edict_t* other, cplane_t* plane, csurface_t* 
 	other->monsterinfo.aiflags |= AI_GOOD_GUY;
 	other->enemy = NULL;
 	other->combattarget = NULL;
+	other->s.effects |= EF_QUAD;
 	other->monsterinfo.search_time = level.time + 5;
 	/*while ((ent = findradius(ent, other->s.origin, 200)) != NULL)
 	{
