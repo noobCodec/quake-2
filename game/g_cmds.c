@@ -793,28 +793,30 @@ void Cmd_Wave_f (edict_t *ent)
 		//ent->client->anim_end = FRAME_salute11;
 		break;
 	case 2:
-		horse = G_Spawn();
-		horse->classname = "monster_mutant";
-		ED_CallSpawn(horse);
-		horse->monsterinfo.aiflags |= AI_GOOD_GUY;
-		VectorCopy(ent->s.origin, horse->s.origin);
-		horse->s.origin[1] += 50;
+		if (!ent->mylvl)
+		{
+			return;
+		}
 		if (ent->mounted)
 		{
-			gi.cvar_set("cl_forwardspeed", "200");
-			gi.cvar_set("cl_sidespeed", "200");
-			gi.cvar_set("fov", "90");
 			ent->mounted = 0;
 			return;
 		}
+		if (!ent->horseded)
+		{
+			horse = G_Spawn();
+			horse->classname = "monster_mutant";
+			ED_CallSpawn(horse);
+			horse->monsterinfo.aiflags |= AI_GOOD_GUY;
+			VectorCopy(ent->s.origin, horse->s.origin);
+			horse->s.origin[1] += 50;
+			ent->horseded = 1;
+		}
+		ent->mounted = 1;
 		ent->dmg = 10;
 		ent->max_health = 2000;
 		ent->health = 1200;
-		ent->mounted = 1;
 		gi.dprintf("HORSEY\n");
-		//gi.cvar_set("cl_forwardspeed", "800");
-		//gi.cvar_set("cl_sidespeed", "800");
-		//gi.cvar_set("fov", "150");
 		break;
 	case 3:
 		gi.cprintf (ent, PRINT_HIGH, "wave\n");
@@ -854,6 +856,7 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 		gi.cvar_set("cl_forwardspeed","50");
 		gi.cvar_set("cl_sidespeed", "50");
 		gi.cvar_set("fov", "50");
+		ent->myclass = 0;
 		ent->dmg = 3;
 		return;
 	}
@@ -865,6 +868,7 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 		gi.cvar_set("cl_sidespeed", "250");
 		gi.cvar_set("fov", "120");
 		ent->dmg = -8;
+		ent->myclass = 1;
 		ent->viewheight = 90;
 		gi.dprintf(ent->classname);
 		return;
@@ -872,28 +876,11 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 	else if (!strcmp(gi.argv(1), "knight"))
 	{
 		ent->health = 800;
+		ent->myclass = 2;
 		gi.dprintf("PICKED KNIGHT\n");
 		gi.cvar_set("cl_forwardspeed", "490");
 		gi.cvar_set("cl_sidespeed", "490");
 		gi.cvar_set("fov", "30");
-		ent->dmg = 1;
-		return;
-	}
-	else if (!strcmp(gi.argv(1), "horse"))
-	{
-		if (ent->mounted /* || ent->mylvl < 1 */ )
-		{
-			ent->mounted = 0;
-			return;
-		}
-		ent->dmg = 10;
-		ent->max_health = 2000;
-		ent->health = 1200;
-		ent->mounted = 1;
-		gi.dprintf("HORSEY\n");
-		gi.cvar_set("cl_forwardspeed", "800");
-		gi.cvar_set("cl_sidespeed", "800");
-		gi.cvar_set("fov", "150");
 		ent->dmg = 1;
 		return;
 	}

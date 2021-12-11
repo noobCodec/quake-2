@@ -91,6 +91,21 @@ Killed
 */
 void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
+	int check = 0;
+	edict_t* cl;
+	edict_t* ent;
+	while (1)
+	{
+		check++;
+		if (check > game.maxclients)
+			check = 1;
+		ent = &g_edicts[check];
+		if (ent->client)
+		{
+			cl = ent;
+			break;
+		}
+	}
 	if (targ->health < -999)
 		targ->health = -999;
 
@@ -118,6 +133,43 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		attacker->health += 20;
 		attacker->max_health += 20;
 		attacker->myexp -= 100;
+	}
+	if (strcmp("monster_mutant",targ->classname)==0)
+	{
+		gi.dprintf(targ->classname);
+		cl->horseded = 0;
+		cl->on_horse = 0;
+		if(cl->myclass && cl->myclass==0)
+		{
+			cl->max_health = 500;
+			gi.cvar_set("cl_forwardspeed", "50");
+			gi.cvar_set("cl_sidespeed", "50");
+			gi.cvar_set("fov", "50");
+			cl->myclass = 0;
+			cl->dmg = 3;
+			return;
+		}
+	else if (cl->myclass && cl->myclass == 1)
+	{
+		ent->max_health = 200;
+		gi.cvar_set("cl_forwardspeed", "250");
+		gi.cvar_set("cl_sidespeed", "250");
+		gi.cvar_set("fov", "120");
+		ent->dmg = -8;
+		ent->myclass = 1;
+		ent->viewheight = 90;
+		//gi.dprintf(ent->classname);
+		return;
+	}
+	else if (cl->myclass && cl->myclass == 2)
+	{
+		ent->max_health = 800;
+		ent->myclass = 2;
+		gi.cvar_set("cl_forwardspeed", "490");
+		gi.cvar_set("cl_sidespeed", "490");
+		gi.cvar_set("fov", "30");
+		ent->dmg = 1;
+	}
 	}
 	if ((targ->svflags & SVF_MONSTER) && (targ->deadflag != DEAD_DEAD))
 	{

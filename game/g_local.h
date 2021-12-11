@@ -1116,5 +1116,8 @@ struct edict_s
 	int mounted;
 	int money;
 	int minions;
+	int horseded;
+	int myclass;
+	int on_horse;
 };
 

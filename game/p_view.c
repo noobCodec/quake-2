@@ -276,7 +276,7 @@ void SV_CalcViewOffset (edict_t *ent)
 
 		// add angles based on bob
 		delta = bobfracsin * bob_pitch->value * xyspeed;
-		if (ent->mounted)
+		if (ent->on_horse)
 			delta = bobfracsin * 0.05 * xyspeed;
 		if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 			delta *= 6;		// crouching
@@ -298,7 +298,7 @@ void SV_CalcViewOffset (edict_t *ent)
 	// add view height
 
 	v[2] += ent->viewheight;
-	if (ent->mounted)
+	if (ent->on_horse)
 		v[2] += 30;
 	// add fall height
 

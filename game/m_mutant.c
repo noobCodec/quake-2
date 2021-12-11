@@ -624,6 +624,13 @@ void rideme(edict_t* self)
 		}
 	}
 	vec3_t neworg;
+	if (!cl->mounted)
+	{
+		walkmonster_start(self);
+		cl->on_horse = 0;
+		self->nextthink = level.time + FRAMETIME;
+		cl->s.origin[1] += 60;
+	}
 	if (cl->client)
 	{
 		M_CheckGround(self);
@@ -645,6 +652,7 @@ void rideme(edict_t* self)
 		return;
 		}
 		self->s.origin[2] += 2;
+		cl->s.origin[2] += 2;
 		//VectorCopy(neworg,cl->s.origin);
 		//VectorCopy(neworg, self->s.origin);
 		gi.linkentity(self);
@@ -654,7 +662,14 @@ void rideme(edict_t* self)
 }
 void mountthink(edict_t* self, edict_t* other)
 {
-	self->think = rideme;
+	if (other->mounted)
+	{
+		gi.cvar_set("cl_forwardspeed", "200");
+		gi.cvar_set("cl_sidespeed", "200");
+		gi.cvar_set("fov", "90");
+		self->think = rideme;
+		other->on_horse = 1;
+	}
 	self->nextthink = level.time + FRAMETIME;
 }
 /*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
