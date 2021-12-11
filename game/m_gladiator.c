@@ -201,6 +201,10 @@ void gladiator_attack(edict_t *self)
 	vec3_t	v;
 
 	// a small safe zone
+	if (!self->enemy)
+	{
+		return;
+	}
 	VectorSubtract (self->s.origin, self->enemy->s.origin, v);
 	range = VectorLength(v);
 	if (range <= (MELEE_DISTANCE + 32))

@@ -763,6 +763,7 @@ void Cmd_Wave_f (edict_t *ent)
 				tmp->goalentity = ent;
 				M_MoveToGoal(tmp, 20);
 				tmp->monsterinfo.aiflags &= ~(AI_STAND_GROUND);
+				tmp->monsterinfo.pausetime = level.time + 1;
 				//tmp->monsterinfo.aiflags ^= AI_STAND_GROUND;
 			}
 
@@ -782,7 +783,8 @@ void Cmd_Wave_f (edict_t *ent)
 				tmp->enemy = NULL;
 				tmp->goalentity = NULL;
 				//M_MoveToGoal(tmp, 20);
-				tmp->monsterinfo.aiflags |= AI_HOLD_FRAME;
+				tmp->monsterinfo.pausetime = level.time + 1000000;
+				tmp->monsterinfo.stand(tmp);
 				tmp->monsterinfo.aiflags |= AI_STAND_GROUND;
 			}
 

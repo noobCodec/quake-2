@@ -109,7 +109,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	if (targ->health < -999)
 		targ->health = -999;
 
-	targ->enemy = attacker;
+	//targ->enemy = attacker;
 	if (!attacker->myexp)
 		attacker->myexp = 60;
 	else
@@ -122,17 +122,22 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	{
 		attacker->money += 400;
 	}
-	if (attacker->myexp > 100)
+	if (attacker->myexp && attacker->myexp > 100)
 	{
-		//gi.dprintf("leveled up\n");
+		gi.dprintf(attacker->classname," leveled up\n");
 		if (attacker->mylvl)
 			attacker->mylvl += 1;
 		else
 			attacker->mylvl = 1;
+		gi.dprintf("\nHealth: %d-->%d\n", attacker->health,attacker->health+20);
+		gi.dprintf("Damage Multi: %d-->%d\n", attacker->dmg, attacker->dmg + 1);
+		gi.dprintf("Max_Health: %d-->%d\n\n", attacker->max_health, attacker->max_health + 40);
 		attacker->dmg +=1;
 		attacker->health += 20;
-		attacker->max_health += 20;
+		attacker->max_health += 40;
 		attacker->myexp -= 100;
+		
+
 	}
 	if (strcmp("monster_mutant",targ->classname)==0)
 	{

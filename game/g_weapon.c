@@ -70,6 +70,10 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	vec3_t		dir;
 
 	//see if enemy is in range
+	if (!self->enemy)
+	{
+		return false;
+	}
 	VectorSubtract (self->enemy->s.origin, self->s.origin, dir);
 	range = VectorLength(dir);
 	if (range > aim[0])

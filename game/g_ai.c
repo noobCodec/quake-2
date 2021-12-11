@@ -446,7 +446,6 @@ qboolean FindTarget (edict_t *self)
 			}
 
 		}
-		gi.dprintf("%d", self->monsterinfo.aiflags & AI_STAND_GROUND);
 		if (self->monsterinfo.aiflags & AI_STAND_GROUND)
 		{
 			return false;

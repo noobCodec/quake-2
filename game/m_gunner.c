@@ -431,6 +431,10 @@ void GunnerFire (edict_t *self)
 	vec3_t	aim;
 	int		flash_number;
 
+	if (!self->enemy)
+	{
+		return;
+	}
 	flash_number = MZ2_GUNNER_MACHINEGUN_1 + (self->s.frame - FRAME_attak216);
 
 	AngleVectors (self->s.angles, forward, right, NULL);
