@@ -1,29 +1,21 @@
-
-This is the complete source code for Quake 2, version 3.19, buildable with
-visual C++ 6.0.  The linux version should be buildable, but we haven't
-tested it for the release.
-
-The code is all licensed under the terms of the GPL (gnu public license).  
-You should read the entire license, but the gist of it is that you can do 
-anything you want with the code, including sell your new version.  The catch 
-is that if you distribute new binary versions, you are required to make the 
-entire source code available for free to everyone.
-
-The primary intent of this release is for entertainment and educational 
-purposes, but the GPL does allow commercial exploitation if you obey the 
-full license.  If you want to do something commercial and you just can't bear 
-to have your source changes released, we could still negotiate a separate 
-license agreement (for $$$), but I would encourage you to just live with the 
-GPL.
-
-All of the Q2 data files remain copyrighted and licensed under the 
-original terms, so you cannot redistribute data from the original game, but if 
-you do a true total conversion, you can create a standalone game based on 
-this code.
-
-Thanks to Robert Duffy for doing the grunt work of building this release.
-
-John Carmack
-Id Software
-
-
+----
+Medieval Simulator Mod
+About The Mod
+----
+All of the weapons have been replaced with their medieval equivalent
+Press R to equip the Blaster and Press 1 to equip the Wand
+The Wand shoots bolts and if you have enough money the enemy will be hired and work for you
+Once you hit Level 1 you can spawn the Horse with M. Touch the horse to ride him. If you hit M again it dismounts then hit M again to mount.
+Enemies will gain various stats such as damage and health as they level up. This is displayed in the console as to their levelups
+Press T to bring up the chat menu and type the following to select a class
+There are currently three classes: warrior, archer, knight
+Type these to select the class.
+Warrior --> Slow heavy damage
+Archer  --> Fast low damage
+Knight	--> High Damage High Speed, but Zoomed in
+----
+Installation
+----
+To install replace the gamex86.dll with the one from the mod.
+Also replace the config.cfg with the one from the mod this is found under resources.
+After that it should run properly
